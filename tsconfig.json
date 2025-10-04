@@ -1,4 +1,6 @@
 {
+  "$schema": "https://www.schemastore.org/tsconfig",
+
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -18,9 +20,18 @@
         "name": "next"
       }
     ],
+    "verbatimModuleSyntax": true,
+
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+
+    "noUncheckedIndexedAccess": true,
+    "noUncheckedSideEffectImports": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true
   },
   "include": [
     "next-env.d.ts",
