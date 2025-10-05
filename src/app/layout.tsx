@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Arvo, JetBrains_Mono, Recursive } from "next/font/google";
+
+import { ThemeProvider } from "~/integration/next-themes/provider";
+import { cn } from "~/lib/utils";
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"]
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const arvo = Arvo({
+  weight: ["400", "700"],
+  variable: "--font-arvo",
+  subsets: ["latin"]
+});
+
+const recursive = Recursive({
+  variable: "--font-recursive",
   subsets: ["latin"]
 });
 
@@ -27,9 +37,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(
+          jetbrainsMono.variable,
+          arvo.variable,
+          recursive.variable
+        )}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="ui-theme"
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
