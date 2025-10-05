@@ -10,7 +10,8 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    DATABASE_URL: z.url()
+    DATABASE_URL: z.url(),
+    BETTER_AUTH_SECRET: z.string()
   },
 
   /**
@@ -37,7 +38,8 @@ export const env = createEnv({
       process.env["NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL"],
     NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_PROTOCOL:
       process.env["NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_PROTOCOL"],
-    NEXT_PUBLIC_VERCEL_ENV: process.env["NEXT_PUBLIC_VERCEL_ENV"]
+    NEXT_PUBLIC_VERCEL_ENV: process.env["NEXT_PUBLIC_VERCEL_ENV"],
+    BETTER_AUTH_SECRET: process.env["BETTER_AUTH_SECRET"]
   },
 
   /**
