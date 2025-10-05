@@ -19,7 +19,11 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL: z.string(),
+    NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_PROTOCOL: z.string(),
+    NEXT_PUBLIC_VERCEL_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development")
   },
 
   /**
@@ -28,7 +32,12 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    DATABASE_URL: process.env["DATABASE_URL"]
+    DATABASE_URL: process.env["DATABASE_URL"],
+    NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL:
+      process.env["NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL"],
+    NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_PROTOCOL:
+      process.env["NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_PROTOCOL"],
+    NEXT_PUBLIC_VERCEL_ENV: process.env["NEXT_PUBLIC_VERCEL_ENV"]
   },
 
   /**
@@ -36,6 +45,7 @@ export const env = createEnv({
    * useful for Docker builds.
    */
   skipValidation: !!process.env["SKIP_ENV_VALIDATION"],
+
   /**
    * Makes it so that empty strings are treated as undefined. `SOME_VAR: z.string()` and
    * `SOME_VAR=''` will throw an error.
