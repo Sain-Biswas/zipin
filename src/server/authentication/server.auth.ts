@@ -1,3 +1,5 @@
+import "server-only";
+
 import { env } from "~/env";
 import { database } from "~/server/database/index.database";
 

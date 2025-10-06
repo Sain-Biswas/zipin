@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Arvo, JetBrains_Mono, Recursive } from "next/font/google";
 
 import { ThemeProvider } from "~/integration/next-themes/provider";
+import { TanstackQueryProviders } from "~/integration/tanstack-query/provider";
 import { cn } from "~/lib/utils";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -35,7 +36,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
       <body
         className={cn(
           jetbrainsMono.variable,
@@ -50,7 +54,7 @@ export default function RootLayout({
           disableTransitionOnChange
           storageKey="ui-theme"
         >
-          {children}
+          <TanstackQueryProviders>{children}</TanstackQueryProviders>
         </ThemeProvider>
       </body>
     </html>
