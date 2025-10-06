@@ -49,6 +49,10 @@
 
   --radius: 0.75rem;
 
+  --custom-red: oklch(0.6267 0.1996 26.5003);
+  --custom-green: oklch(0.7823 0.1831 151.3196);
+  --custom-yellow: oklch(0.708 0.1041 85.7289);
+
   --shadow-x: 0px;
   --shadow-y: 1px;
   --shadow-blur: 4px;
@@ -118,6 +122,10 @@
   --sidebar-ring: oklch(0.928 0.2005 127.3412);
 
   --radius: 0.75rem;
+
+  --custom-red: oklch(0.6737 0.1946 25.9191);
+  --custom-green: oklch(0.827 0.1814 152.2906);
+  --custom-yellow: oklch(0.7573 0.1056 87.1295);
 
   --shadow-x: 0px;
   --shadow-y: 1px;
@@ -198,6 +206,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  --color-custom-red: var(--custom-red);
+  --color-custom-green: var(--custom-green);
+  --color-custom-yellow: var(--custom-yellow);
+
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
@@ -226,5 +238,14 @@
 
   code {
     @apply font-mono;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
