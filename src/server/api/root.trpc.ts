@@ -2,6 +2,7 @@ import "server-only";
 
 import { createCallerFactory, createTRPCRouter } from "~/server/api/index.trpc";
 import { indexRouter } from "~/server/api/routes/index.route";
+import { authenticationRouter } from "./routes/authentication.route";
 
 /**
  * This is the primary router for your server.
@@ -9,7 +10,8 @@ import { indexRouter } from "~/server/api/routes/index.route";
  * All routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  index: indexRouter
+  index: indexRouter,
+  authentication: authenticationRouter
 });
 
 /**
