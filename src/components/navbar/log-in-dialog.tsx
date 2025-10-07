@@ -1,13 +1,16 @@
 "use client";
 
+import { LinkIcon } from "lucide-react";
 import { Button } from "~/shadcn/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from "~/shadcn/ui/dialog";
+import { ItemMedia } from "~/shadcn/ui/item";
 
 export function LogInDialog() {
   return (
@@ -22,8 +25,14 @@ export function LogInDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Log In</DialogTitle>
+        <DialogHeader className="items-center">
+          <ItemMedia variant={"icon"}>
+            <LinkIcon />
+          </ItemMedia>
+          <DialogTitle>Log In to Zip In</DialogTitle>
+          <DialogDescription>
+            Welcome back! Log In to continue
+          </DialogDescription>
         </DialogHeader>
       </DialogContent>
     </Dialog>

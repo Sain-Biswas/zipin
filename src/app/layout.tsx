@@ -4,6 +4,7 @@ import { Arvo, JetBrains_Mono, Recursive } from "next/font/google";
 import { ThemeProvider } from "~/integration/next-themes/provider";
 import { TanstackQueryProviders } from "~/integration/tanstack-query/provider";
 import { cn } from "~/lib/utils";
+import { Toaster } from "~/shadcn/ui/sonner";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -54,7 +55,10 @@ export default function RootLayout({
           disableTransitionOnChange
           storageKey="ui-theme"
         >
-          <TanstackQueryProviders>{children}</TanstackQueryProviders>
+          <TanstackQueryProviders>
+            {children}
+            <Toaster position="top-right" />
+          </TanstackQueryProviders>
         </ThemeProvider>
       </body>
     </html>
