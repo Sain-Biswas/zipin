@@ -11,6 +11,7 @@ import {
   UserIcon,
   UserRoundXIcon
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -36,7 +37,7 @@ import { ItemMedia } from "~/shadcn/ui/item";
 import { Spinner } from "~/shadcn/ui/spinner";
 import { CustomToast } from "../toasts";
 
-export const createAccountFormSchema = z
+const createAccountFormSchema = z
   .object({
     name: z
       .string()
@@ -76,6 +77,8 @@ export function CreateAccountDialog() {
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -111,6 +114,7 @@ export function CreateAccountDialog() {
               />
             );
           });
+          router.push("/dashboard");
         },
         onError(error) {
           toast.custom((id) => (

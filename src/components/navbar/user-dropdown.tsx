@@ -1,10 +1,11 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { LayoutDashboardIcon, LogOutIcon, UserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import type { RouterOutputs } from "~/integration/trpc/client.trpc";
+import { trpcClient, type RouterOutputs } from "~/integration/trpc/client.trpc";
 import { authClient } from "~/server/authentication/client.auth";
 import { Avatar, AvatarFallback, AvatarImage } from "~/shadcn/ui/avatar";
 import {
@@ -31,6 +32,7 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ user }: UserDropdownProps) {
+  const queryClient = useQueryClient();
   const router = useRouter();
   return (
     <DropdownMenu>
@@ -96,7 +98,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
           onClick={async () => {
             await authClient.signOut({
               fetchOptions: {
-                onSuccess: () => {
+                onSuccess: async () => {
                   toast.custom((id) => (
                     <CustomToast
                       key={id}
@@ -108,6 +110,9 @@ export function UserDropdown({ user }: UserDropdownProps) {
                       }}
                     />
                   ));
+                  await queryClient.invalidateQueries(
+                    trpcClient.authentication.isAuthenticated.queryFilter()
+                  );
                   router.refresh();
                   router.push("/");
                 }
