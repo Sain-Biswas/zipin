@@ -1,9 +1,17 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { CircleAlertIcon } from "lucide-react";
 import { trpcClient } from "~/integration/trpc/client.trpc";
 import { Avatar, AvatarFallback, AvatarImage } from "~/shadcn/ui/avatar";
-import { Item, ItemActions, ItemMedia } from "~/shadcn/ui/item";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle
+} from "~/shadcn/ui/item";
 import { Skeleton } from "~/shadcn/ui/skeleton";
 import { CreateAccountDialog } from "./create-account-dialog";
 import { LogInDialog } from "./log-in-dialog";
@@ -15,7 +23,23 @@ export function AuthenticationUser() {
 
   if (isPending) return <Skeleton className="h-10 w-36" />;
 
-  if (error) return <Item className="px-0">Error: {error.message}</Item>;
+  if (error)
+    return (
+      <Item
+        className="p-0"
+        size={"sm"}
+      >
+        <ItemMedia variant={"icon"}>
+          <CircleAlertIcon />
+        </ItemMedia>
+        <ItemContent className="gap-0">
+          <ItemTitle className="text-sm">Fetch failed</ItemTitle>
+          <ItemDescription className="text-xs">
+            Try reloading page
+          </ItemDescription>
+        </ItemContent>
+      </Item>
+    );
 
   if (data.success)
     return (

@@ -17,8 +17,7 @@ const globalForDb = globalThis as unknown as {
 const pool =
   globalForDb.pool ??
   new Pool({
-    connectionString: env.DATABASE_URL,
-    ssl: true
+    connectionString: env.DATABASE_URL
   });
 
 if (env.NODE_ENV !== "production") globalForDb.pool = pool;

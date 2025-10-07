@@ -7,13 +7,25 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { haveIBeenPwned, openAPI, username } from "better-auth/plugins";
+import {
+  accountSchema,
+  sessionSchema,
+  userSchema,
+  verificationSchema
+} from "~/server/database/index.schema";
 
 export const auth = betterAuth({
   appName: "Zip In",
   secret: env.BETTER_AUTH_SECRET,
   baseURL: `${env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_PROTOCOL}${env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`,
   database: drizzleAdapter(database, {
-    provider: "pg"
+    provider: "pg",
+    schema: {
+      user: userSchema,
+      account: accountSchema,
+      session: sessionSchema,
+      verification: verificationSchema
+    }
   }),
   emailAndPassword: {
     enabled: true

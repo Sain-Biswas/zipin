@@ -1,6 +1,19 @@
 "use client";
 
-import { LinkIcon } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AtSignIcon,
+  EyeIcon,
+  EyeOffIcon,
+  LinkIcon,
+  LockIcon,
+  SignatureIcon,
+  UserIcon,
+  UserRoundXIcon
+} from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 import { authClient } from "~/server/authentication/client.auth";
 import { Button } from "~/shadcn/ui/button";
@@ -8,16 +21,27 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from "~/shadcn/ui/dialog";
+import { Field, FieldError, FieldGroup, FieldSet } from "~/shadcn/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput
+} from "~/shadcn/ui/input-group";
 import { ItemMedia } from "~/shadcn/ui/item";
+import { Spinner } from "~/shadcn/ui/spinner";
+import { CustomToast } from "../toasts";
 
 export const createAccountFormSchema = z
   .object({
-    name: z.string(),
-    email: z.email(),
+    name: z
+      .string()
+      .min(1, { error: "Name is required for account creation." }),
+    email: z.email({ error: "Please enter a valid email." }),
     username: z
       .string()
       .min(3, {
@@ -37,7 +61,7 @@ export const createAccountFormSchema = z
     const { data: response } = await authClient.isUsernameAvailable({
       username: data.username
     });
-    if (!response?.available) {
+    if (response?.available === false) {
       ctx.addIssue({
         code: "custom",
         message:
@@ -49,6 +73,63 @@ export const createAccountFormSchema = z
   });
 
 export function CreateAccountDialog() {
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(createAccountFormSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      password: "",
+      username: ""
+    }
+  });
+
+  async function onSubmit(values: z.infer<typeof createAccountFormSchema>) {
+    setIsPending(true);
+    await authClient.signUp.email({
+      ...values,
+      callbackURL: "/dashboard",
+      fetchOptions: {
+        onSuccess() {
+          toast.custom((id) => {
+            return (
+              <CustomToast
+                key={id}
+                id={id}
+                content={{
+                  icon: <UserIcon />,
+                  title: `${values.name} registered successfully`,
+                  source: "Authentication",
+                  description: "Redirecting to user dashboard"
+                }}
+              />
+            );
+          });
+        },
+        onError(error) {
+          toast.custom((id) => (
+            <CustomToast
+              key={id}
+              id={id}
+              content={{
+                icon: <UserRoundXIcon />,
+                title: error.error.message,
+                source: "Authentication"
+              }}
+            />
+          ));
+        }
+      }
+    });
+    setIsPending(false);
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -70,6 +151,98 @@ export function CreateAccountDialog() {
             Welcome! Create an account to get started
           </DialogDescription>
         </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <FieldSet>
+              <Field>
+                <InputGroup>
+                  <InputGroupInput
+                    placeholder="Name"
+                    {...register("name")}
+                  />
+                  <InputGroupAddon>
+                    <SignatureIcon />
+                  </InputGroupAddon>
+                </InputGroup>
+                {errors.name?.message && (
+                  <FieldError>{errors.name.message}</FieldError>
+                )}
+              </Field>
+              <Field>
+                <InputGroup>
+                  <InputGroupInput
+                    placeholder="Username"
+                    {...register("username")}
+                  />
+                  <InputGroupAddon>
+                    <UserIcon />
+                  </InputGroupAddon>
+                </InputGroup>
+                {errors.username?.message && (
+                  <FieldError>{errors.username.message}</FieldError>
+                )}
+              </Field>
+              <Field>
+                <InputGroup>
+                  <InputGroupInput
+                    placeholder="Email"
+                    {...register("email")}
+                  />
+                  <InputGroupAddon>
+                    <AtSignIcon />
+                  </InputGroupAddon>
+                </InputGroup>
+                {errors.email?.message && (
+                  <FieldError>{errors.email.message}</FieldError>
+                )}
+              </Field>
+              <Field>
+                <InputGroup>
+                  <InputGroupInput
+                    placeholder="Password"
+                    type={isVisible ? "text" : "password"}
+                    {...register("password")}
+                  />
+                  <InputGroupAddon>
+                    <LockIcon />
+                  </InputGroupAddon>
+                  <InputGroupAddon align={"inline-end"}>
+                    <Button
+                      variant={"ghost"}
+                      size={"icon-sm"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsVisible((c) => !c);
+                      }}
+                    >
+                      {isVisible ?
+                        <EyeIcon />
+                      : <EyeOffIcon />}
+                    </Button>
+                  </InputGroupAddon>
+                </InputGroup>
+                {errors.password?.message && (
+                  <FieldError>{errors.password.message}</FieldError>
+                )}
+              </Field>
+            </FieldSet>
+            <DialogFooter>
+              <Button
+                type="reset"
+                variant={"secondary"}
+              >
+                Reset
+              </Button>
+              <Button
+                type="submit"
+                disabled={isPending}
+              >
+                {isPending && <Spinner />}
+                Create Account
+              </Button>
+            </DialogFooter>
+          </FieldGroup>
+        </form>
       </DialogContent>
     </Dialog>
   );
