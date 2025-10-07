@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   IconCamera,
   IconChartBar,
@@ -18,6 +17,7 @@ import {
   IconSettings,
   IconUsers
 } from "@tabler/icons-react";
+import * as React from "react";
 
 import { NavDocuments } from "~/shadcn/nav-documents";
 import { NavMain } from "~/shadcn/nav-main";

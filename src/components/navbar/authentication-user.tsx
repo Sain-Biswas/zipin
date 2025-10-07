@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { CircleAlertIcon } from "lucide-react";
 import { trpcClient } from "~/integration/trpc/client.trpc";
-import { Avatar, AvatarFallback, AvatarImage } from "~/shadcn/ui/avatar";
 import {
   Item,
   ItemActions,
@@ -15,6 +14,7 @@ import {
 import { Skeleton } from "~/shadcn/ui/skeleton";
 import { CreateAccountDialog } from "./create-account-dialog";
 import { LogInDialog } from "./log-in-dialog";
+import { UserDropdown } from "./user-dropdown";
 
 export function AuthenticationUser() {
   const { data, error, isPending } = useQuery(
@@ -33,7 +33,7 @@ export function AuthenticationUser() {
           <CircleAlertIcon />
         </ItemMedia>
         <ItemContent className="gap-0">
-          <ItemTitle className="text-sm">Fetch failed</ItemTitle>
+          <ItemTitle className="text-xs">Fetch failed</ItemTitle>
           <ItemDescription className="text-xs">
             Try reloading page
           </ItemDescription>
@@ -41,19 +41,7 @@ export function AuthenticationUser() {
       </Item>
     );
 
-  if (data.success)
-    return (
-      <Item className="px-0">
-        <ItemMedia variant="image">
-          <Avatar>
-            <AvatarImage src={data.user.image ?? undefined} />
-            <AvatarFallback>
-              {data.user.name.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </ItemMedia>
-      </Item>
-    );
+  if (data.success) return <UserDropdown user={data.user} />;
 
   return (
     <Item className="px-0">
