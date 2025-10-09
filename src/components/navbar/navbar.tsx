@@ -1,4 +1,4 @@
-import { LinkIcon } from "lucide-react";
+import { IconCirclesRelation } from "@tabler/icons-react";
 import { Item, ItemContent, ItemMedia, ItemTitle } from "~/shadcn/ui/item";
 import { AuthenticationUser } from "./authentication-user";
 
@@ -10,7 +10,7 @@ export function Navbar() {
         className="px-0"
       >
         <ItemMedia variant={"icon"}>
-          <LinkIcon />
+          <IconCirclesRelation />
         </ItemMedia>
         <ItemContent>
           <ItemTitle className="font-bold md:text-xl">Zip In</ItemTitle>

@@ -3,6 +3,7 @@
 import {
   IconCamera,
   IconChartBar,
+  IconCirclesRelation,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -10,13 +11,13 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
   IconUsers
 } from "@tabler/icons-react";
+import Link from "next/link";
 import * as React from "react";
 
 import { NavDocuments } from "~/shadcn/nav-documents";
@@ -163,10 +164,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <Link href="/">
+                <IconCirclesRelation className="!size-5" />
+                <span className="text-base font-semibold">Zip In</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -180,7 +181,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

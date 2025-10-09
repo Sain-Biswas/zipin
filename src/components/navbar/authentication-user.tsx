@@ -1,7 +1,7 @@
 "use client";
 
+import { IconExclamationCircleFilled } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { CircleAlertIcon } from "lucide-react";
 import { trpcClient } from "~/integration/trpc/client.trpc";
 import {
   Item,
@@ -30,7 +30,7 @@ export function AuthenticationUser() {
         size={"sm"}
       >
         <ItemMedia variant={"icon"}>
-          <CircleAlertIcon />
+          <IconExclamationCircleFilled />
         </ItemMedia>
         <ItemContent className="gap-0">
           <ItemTitle className="text-xs">Fetch failed</ItemTitle>

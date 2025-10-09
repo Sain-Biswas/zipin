@@ -2,19 +2,20 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  AtSignIcon,
-  EyeIcon,
-  EyeOffIcon,
-  LinkIcon,
-  LockIcon,
-  UserRoundIcon,
-  UserRoundXIcon
-} from "lucide-react";
+  IconAt,
+  IconCirclesRelation,
+  IconEye,
+  IconEyeOff,
+  IconLockFilled
+} from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { UserRoundIcon, UserRoundXIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { trpcClient } from "~/integration/trpc/client.trpc";
 import { authClient } from "~/server/authentication/client.auth";
 import { Button } from "~/shadcn/ui/button";
 import {
@@ -57,6 +58,8 @@ export function LogInDialog() {
     useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const {
@@ -79,7 +82,7 @@ export function LogInDialog() {
         email: values.nameORusername,
         password: values.password,
         fetchOptions: {
-          onSuccess: () => {
+          onSuccess: async () => {
             toast.custom((id) => (
               <CustomToast
                 id={id}
@@ -91,7 +94,9 @@ export function LogInDialog() {
                 }}
               />
             ));
-            router.refresh();
+            await queryClient.invalidateQueries(
+              trpcClient.authentication.isAuthenticated.queryFilter()
+            );
             router.push("/dashboard");
           },
           onError: ({ error }) => {
@@ -114,7 +119,7 @@ export function LogInDialog() {
         username: values.nameORusername,
         password: values.password,
         fetchOptions: {
-          onSuccess: () => {
+          onSuccess: async () => {
             toast.custom((id) => (
               <CustomToast
                 id={id}
@@ -126,7 +131,9 @@ export function LogInDialog() {
                 }}
               />
             ));
-            router.refresh();
+            await queryClient.invalidateQueries(
+              trpcClient.authentication.isAuthenticated.queryFilter()
+            );
             router.push("/dashboard");
           },
           onError: ({ error }) => {
@@ -163,7 +170,7 @@ export function LogInDialog() {
       <DialogContent>
         <DialogHeader className="items-center">
           <ItemMedia variant={"icon"}>
-            <LinkIcon />
+            <IconCirclesRelation />
           </ItemMedia>
           <DialogTitle>Log In to Zip In</DialogTitle>
           <DialogDescription>
@@ -202,7 +209,7 @@ export function LogInDialog() {
                   />
                   <InputGroupAddon>
                     {switchEmailUsername ?
-                      <AtSignIcon />
+                      <IconAt />
                     : <UserRoundIcon />}
                   </InputGroupAddon>
                 </InputGroup>
@@ -218,7 +225,7 @@ export function LogInDialog() {
                     type={showPassword ? "text" : "password"}
                   />
                   <InputGroupAddon>
-                    <LockIcon />
+                    <IconLockFilled />
                   </InputGroupAddon>
                   <InputGroupAddon align={"inline-end"}>
                     <Button
@@ -230,8 +237,8 @@ export function LogInDialog() {
                       }}
                     >
                       {showPassword ?
-                        <EyeIcon />
-                      : <EyeOffIcon />}
+                        <IconEye />
+                      : <IconEyeOff />}
                     </Button>
                   </InputGroupAddon>
                 </InputGroup>

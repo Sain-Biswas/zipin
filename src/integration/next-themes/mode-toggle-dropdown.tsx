@@ -1,6 +1,10 @@
 "use client";
 
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import {
+  IconDeviceDesktop,
+  IconMoonFilled,
+  IconSunHighFilled
+} from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "~/shadcn/ui/button";
@@ -22,8 +26,8 @@ export function ModeToggleDropdown() {
           variant="outline"
           size="icon"
         >
-          <SunIcon className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-          <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          <IconSunHighFilled className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+          <IconMoonFilled className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
@@ -35,7 +39,7 @@ export function ModeToggleDropdown() {
         >
           Light
           <DropdownMenuShortcut>
-            <SunIcon />
+            <IconSunHighFilled />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -45,7 +49,7 @@ export function ModeToggleDropdown() {
         >
           Dark
           <DropdownMenuShortcut>
-            <MoonIcon />
+            <IconMoonFilled />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -55,7 +59,7 @@ export function ModeToggleDropdown() {
         >
           System
           <DropdownMenuShortcut>
-            <MonitorIcon />
+            <IconDeviceDesktop />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>

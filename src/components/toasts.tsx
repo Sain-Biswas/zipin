@@ -1,6 +1,6 @@
 "use client";
 
-import { XIcon } from "lucide-react";
+import { IconX } from "@tabler/icons-react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "~/shadcn/ui/button";
@@ -62,7 +62,7 @@ export function CustomToast({
             onClick={() => toast.dismiss(id)}
             aria-label="toast-close-button"
           >
-            <XIcon />
+            <IconX />
           </Button>
         </div>
         <div className="flex gap-2">

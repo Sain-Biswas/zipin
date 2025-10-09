@@ -2,20 +2,21 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  AtSignIcon,
-  EyeIcon,
-  EyeOffIcon,
-  LinkIcon,
-  LockIcon,
-  SignatureIcon,
-  UserIcon,
-  UserRoundXIcon
-} from "lucide-react";
+  IconAt,
+  IconCirclesRelation,
+  IconEye,
+  IconEyeOff,
+  IconLockFilled,
+  IconSignature
+} from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { UserRoundIcon, UserRoundXIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { trpcClient } from "~/integration/trpc/client.trpc";
 import { authClient } from "~/server/authentication/client.auth";
 import { Button } from "~/shadcn/ui/button";
 import {
@@ -77,6 +78,8 @@ export function CreateAccountDialog() {
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const {
@@ -99,14 +102,14 @@ export function CreateAccountDialog() {
       ...values,
       callbackURL: "/dashboard",
       fetchOptions: {
-        onSuccess() {
+        onSuccess: async () => {
           toast.custom((id) => {
             return (
               <CustomToast
                 key={id}
                 id={id}
                 content={{
-                  icon: <UserIcon />,
+                  icon: <UserRoundIcon />,
                   title: `${values.name} registered successfully`,
                   source: "Authentication",
                   description: "Redirecting to user dashboard"
@@ -114,6 +117,9 @@ export function CreateAccountDialog() {
               />
             );
           });
+          await queryClient.invalidateQueries(
+            trpcClient.authentication.isAuthenticated.queryFilter()
+          );
           router.push("/dashboard");
         },
         onError(error) {
@@ -148,7 +154,7 @@ export function CreateAccountDialog() {
       <DialogContent>
         <DialogHeader className="items-center">
           <ItemMedia variant={"icon"}>
-            <LinkIcon />
+            <IconCirclesRelation />
           </ItemMedia>
           <DialogTitle>Create a Zip In Account</DialogTitle>
           <DialogDescription>
@@ -165,7 +171,7 @@ export function CreateAccountDialog() {
                     {...register("name")}
                   />
                   <InputGroupAddon>
-                    <SignatureIcon />
+                    <IconSignature />
                   </InputGroupAddon>
                 </InputGroup>
                 {errors.name?.message && (
@@ -179,7 +185,7 @@ export function CreateAccountDialog() {
                     {...register("username")}
                   />
                   <InputGroupAddon>
-                    <UserIcon />
+                    <UserRoundIcon />
                   </InputGroupAddon>
                 </InputGroup>
                 {errors.username?.message && (
@@ -193,7 +199,7 @@ export function CreateAccountDialog() {
                     {...register("email")}
                   />
                   <InputGroupAddon>
-                    <AtSignIcon />
+                    <IconAt />
                   </InputGroupAddon>
                 </InputGroup>
                 {errors.email?.message && (
@@ -208,7 +214,7 @@ export function CreateAccountDialog() {
                     {...register("password")}
                   />
                   <InputGroupAddon>
-                    <LockIcon />
+                    <IconLockFilled />
                   </InputGroupAddon>
                   <InputGroupAddon align={"inline-end"}>
                     <Button
@@ -220,8 +226,8 @@ export function CreateAccountDialog() {
                       }}
                     >
                       {isVisible ?
-                        <EyeIcon />
-                      : <EyeOffIcon />}
+                        <IconEye />
+                      : <IconEyeOff />}
                     </Button>
                   </InputGroupAddon>
                 </InputGroup>

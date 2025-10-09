@@ -1,7 +1,8 @@
 "use client";
 
+import { IconLayout2Filled, IconLogout } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboardIcon, LogOutIcon, UserRoundIcon } from "lucide-react";
+import { UserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -87,7 +88,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
             <Link href={"/dashboard"}>
               Dashboard
               <DropdownMenuShortcut>
-                <LayoutDashboardIcon />
+                <IconLayout2Filled />
               </DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
@@ -122,7 +123,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
         >
           Logout
           <DropdownMenuShortcut>
-            <LogOutIcon />
+            <IconLogout />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
