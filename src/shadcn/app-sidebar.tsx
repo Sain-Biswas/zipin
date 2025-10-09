@@ -20,7 +20,6 @@ import {
 import Link from "next/link";
 import * as React from "react";
 
-import { NavDocuments } from "~/shadcn/nav-documents";
 import { NavMain } from "~/shadcn/nav-main";
 import { NavSecondary } from "~/shadcn/nav-secondary";
 import { NavUser } from "~/shadcn/nav-user";
@@ -174,7 +173,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
         <NavSecondary
           items={data.navSecondary}
           className="mt-auto"
