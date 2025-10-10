@@ -14,7 +14,7 @@ export default function AuthenticatedTemplate({ children }: LayoutProps<"/">) {
 
   if (isPending)
     return (
-      <main className="grid h-full w-full place-content-center">
+      <main className="grid size-full place-content-center">
         <div className="flex flex-col items-center justify-center gap-4">
           <Spinner />
           <p>Loading</p>

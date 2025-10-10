@@ -39,7 +39,7 @@ export async function GET(
 
     return NextResponse.json(
       {
-        massage: "Internal Server Error"
+        message: "Internal Server Error"
       },
       { status: 500 }
     );

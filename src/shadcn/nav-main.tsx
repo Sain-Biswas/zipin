@@ -1,10 +1,14 @@
 "use client";
 
 import {
+  IconChartBar,
   IconCirclePlusFilled,
   IconLayout2Filled,
+  IconLink,
   IconMail
 } from "@tabler/icons-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Button } from "~/shadcn/ui/button";
 import {
@@ -20,10 +24,22 @@ const items = [
     title: "Dashboard",
     url: "/dashboard",
     icon: IconLayout2Filled
+  },
+  {
+    title: "Analytics",
+    url: "/analytics",
+    icon: IconChartBar
+  },
+  {
+    title: "Links",
+    url: "/links",
+    icon: IconLink
   }
 ] as const;
 
 export function NavMain() {
+  const path = usePathname();
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -49,9 +65,15 @@ export function NavMain() {
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
-                <item.icon />
-                <span>{item.title}</span>
+              <SidebarMenuButton
+                tooltip={item.title}
+                asChild
+                variant={path === item.url ? "outline" : "default"}
+              >
+                <Link href={item.url}>
+                  <item.icon />
+                  <span>{item.title}</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

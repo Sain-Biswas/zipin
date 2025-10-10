@@ -6,7 +6,7 @@ import { Separator } from "~/shadcn/ui/separator";
 import { SidebarTrigger } from "~/shadcn/ui/sidebar";
 import data from "./data.json";
 
-export default function Page() {
+export default function DashboardPage() {
   return (
     <main>
       <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -16,7 +16,7 @@ export default function Page() {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">Documents</h1>
+          <h1 className="text-base font-medium">Dashboard</h1>
         </div>
       </header>
       <div className="flex flex-1 flex-col">
