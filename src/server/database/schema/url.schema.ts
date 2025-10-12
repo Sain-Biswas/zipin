@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { json, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { folderSchema } from "./folders.schema";
 import { tagsSchema } from "./tags.schema";
 import { userSchema } from "./user.schema";
@@ -15,7 +15,14 @@ export const urlSchema = pgTable("url", {
   expiresOn: timestamp("expires_on"),
   folderId: text("folder_id").references(() => folderSchema.id, {
     onDelete: "cascade"
-  })
+  }),
+  utm: json("utm").$type<{
+    source: string;
+    medium: string;
+    campaign: string;
+    term: string;
+    content: string;
+  }>()
 });
 
 export const urlToTagsSchema = pgTable("url_to_tags", {

@@ -10,11 +10,13 @@ export const folderSchema = pgTable("folder", {
   normalized: text("normalized").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   isUTM: boolean("is_utm").default(false),
+
   isSourceEnabled: boolean("is_source_enabled").notNull(),
   isMediumEnabled: boolean("is_medium_enabled").notNull(),
   isCampaignEnabled: boolean("is_campaign_enabled").notNull(),
   isTermEnabled: boolean("is_term_enabled").notNull(),
   isContentEnabled: boolean("is_content_enabled").notNull(),
+
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .notNull()
