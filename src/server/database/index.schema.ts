@@ -4,7 +4,11 @@ export { userSchema } from "~/server/database/schema/user.schema";
 export { verificationSchema } from "~/server/database/schema/verification.schema";
 
 export { clicksSchema } from "~/server/database/schema/clicks.schema";
-export { tagsSchema } from "~/server/database/schema/tags.schema";
+export {
+  folderRelation,
+  folderSchema
+} from "~/server/database/schema/folders.schema";
+export { tagsRelation, tagsSchema } from "~/server/database/schema/tags.schema";
 export {
   urlRelation,
   urlSchema,
