@@ -17,11 +17,11 @@ export const urlSchema = pgTable("url", {
     onDelete: "cascade"
   }),
   utm: json("utm").$type<{
-    source: string;
-    medium: string;
-    campaign: string;
-    term: string;
-    content: string;
+    source: string | null;
+    medium: string | null;
+    campaign: string | null;
+    term: string | null;
+    content: string | null;
   }>(),
   isActive: boolean("is_active").notNull().default(true)
 });

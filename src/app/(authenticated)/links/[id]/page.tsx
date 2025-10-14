@@ -12,7 +12,6 @@ import { Separator } from "~/shadcn/ui/separator";
 import { SidebarTrigger } from "~/shadcn/ui/sidebar";
 
 export default function LinksPage({ params }: PageProps<"/links/[id]">) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const linkId = use(params).id;
 
   return (
