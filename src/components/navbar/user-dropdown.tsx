@@ -1,8 +1,15 @@
 "use client";
 
-import { IconLayout2Filled, IconLogout } from "@tabler/icons-react";
+import {
+  IconDeviceDesktop,
+  IconLayout2Filled,
+  IconLogout,
+  IconMoonFilled,
+  IconSunHighFilled
+} from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { UserRoundIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -15,8 +22,12 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from "~/shadcn/ui/dropdown-menu";
 import {
@@ -35,12 +46,14 @@ interface UserDropdownProps {
 export function UserDropdown({ user }: UserDropdownProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { setTheme } = useTheme();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Item
           size={"sm"}
-          className="rounded-lg p-0 data-[state=open]:bg-muted data-[state=open]:text-muted-foreground"
+          className="rounded-lg p-0"
         >
           <ItemMedia variant={"icon"}>
             <Avatar>
@@ -92,6 +105,47 @@ export function UserDropdown({ user }: UserDropdownProps) {
               </DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <IconSunHighFilled className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+              <IconMoonFilled className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+              Theme
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setTheme("light");
+                  }}
+                >
+                  Light
+                  <DropdownMenuShortcut>
+                    <IconSunHighFilled />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setTheme("dark");
+                  }}
+                >
+                  Dark
+                  <DropdownMenuShortcut>
+                    <IconMoonFilled />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setTheme("system");
+                  }}
+                >
+                  System
+                  <DropdownMenuShortcut>
+                    <IconDeviceDesktop />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

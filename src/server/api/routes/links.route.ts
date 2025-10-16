@@ -7,6 +7,7 @@ import { slugify } from "~/lib/normalize-alphanumeric-string";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/index.trpc";
 import {
+  folderSchema,
   tagsSchema,
   urlSchema,
   urlToTagsSchema
@@ -95,5 +96,36 @@ export const linksRouter = createTRPCRouter({
         .returning();
 
       return newTag[0];
+    }),
+
+  createNewFolder: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        isUTM: z.boolean(),
+        isSourceEnabled: z.boolean(),
+        isMediumEnabled: z.boolean(),
+        isCampaignEnabled: z.boolean(),
+        isTermEnabled: z.boolean(),
+        isContentEnabled: z.boolean()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const normalized = slugify(input.name);
+
+      const existing = await ctx.database.query.folderSchema.findFirst({
+        where: and(
+          eq(folderSchema.normalized, normalized),
+          eq(folderSchema.name, input.name)
+        )
+      });
+
+      if (!!existing)
+        throw new TRPCError({ code: "CONFLICT", message: existing.name });
+
+      await ctx.database.insert(folderSchema).values({
+        ...input,
+        normalized
+      });
     })
 });
