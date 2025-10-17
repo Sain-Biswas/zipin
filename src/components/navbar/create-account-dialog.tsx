@@ -123,6 +123,26 @@ export function CreateAccountDialog() {
           router.push("/dashboard");
         },
         onError(error) {
+          if (
+            error.error["code"] &&
+            error.error["code"] === "PASSWORD_COMPROMISED"
+          ) {
+            toast.custom((id) => (
+              <CustomToast
+                key={id}
+                id={id}
+                content={{
+                  icon: <UserRoundXIcon />,
+                  title: "Compromised Password Detected",
+                  description: "Please choose a safer password",
+                  source: "Authentication"
+                }}
+              />
+            ));
+
+            return;
+          }
+
           toast.custom((id) => (
             <CustomToast
               key={id}

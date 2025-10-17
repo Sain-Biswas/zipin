@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { urlSchema } from "./url.schema";
+import { userSchema } from "./user.schema";
 
 export const folderSchema = pgTable("folder", {
   id: text("id")
@@ -10,6 +11,9 @@ export const folderSchema = pgTable("folder", {
   normalized: text("normalized").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   isUTM: boolean("is_utm").default(false),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userSchema.id),
 
   isSourceEnabled: boolean("is_source_enabled").notNull(),
   isMediumEnabled: boolean("is_medium_enabled").notNull(),
@@ -23,6 +27,11 @@ export const folderSchema = pgTable("folder", {
     .$onUpdateFn(() => new Date())
 });
 
-export const folderRelation = relations(folderSchema, ({ many }) => ({
-  urls: many(urlSchema, { relationName: "url--folder" })
+export const folderRelation = relations(folderSchema, ({ many, one }) => ({
+  urls: many(urlSchema, { relationName: "url--folder" }),
+  user: one(userSchema, {
+    fields: [folderSchema.userId],
+    references: [userSchema.id],
+    relationName: "folders---user"
+  })
 }));

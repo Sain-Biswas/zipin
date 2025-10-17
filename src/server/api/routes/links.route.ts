@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import "server-only";
 
 import { z } from "zod";
@@ -78,8 +78,11 @@ export const linksRouter = createTRPCRouter({
 
       const existing = await ctx.database.query.tagsSchema.findFirst({
         where: and(
-          eq(tagsSchema.normalized, normalized),
-          eq(tagsSchema.name, input.name)
+          or(
+            eq(tagsSchema.normalized, normalized),
+            eq(tagsSchema.name, input.name)
+          ),
+          eq(tagsSchema.userId, ctx.user.id)
         )
       });
 
@@ -98,6 +101,15 @@ export const linksRouter = createTRPCRouter({
       return newTag[0];
     }),
 
+  getAvailableTags: protectedProcedure.query(async ({ ctx }) => {
+    const tags = await ctx.database.query.tagsSchema.findMany({
+      where: eq(tagsSchema.userId, ctx.user.id)
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return tags.map(({ userId, ...tag }) => tag);
+  }),
+
   createNewFolder: protectedProcedure
     .input(
       z.object({
@@ -115,8 +127,11 @@ export const linksRouter = createTRPCRouter({
 
       const existing = await ctx.database.query.folderSchema.findFirst({
         where: and(
-          eq(folderSchema.normalized, normalized),
-          eq(folderSchema.name, input.name)
+          or(
+            eq(folderSchema.normalized, normalized),
+            eq(folderSchema.name, input.name)
+          ),
+          eq(folderSchema.userId, ctx.user.id)
         )
       });
 
@@ -125,7 +140,38 @@ export const linksRouter = createTRPCRouter({
 
       await ctx.database.insert(folderSchema).values({
         ...input,
-        normalized
+        normalized,
+        userId: ctx.user.id
       });
+    }),
+
+  getAvailableFolder: protectedProcedure.query(async ({ ctx }) => {
+    const folders = await ctx.database.query.folderSchema.findMany({
+      where: eq(folderSchema.userId, ctx.user.id)
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return folders.map(({ userId, ...folder }) => folder);
+  }),
+
+  getFolderWithLinks: protectedProcedure
+    .input(
+      z.object({
+        folderName: z.string()
+      })
+    )
+    .query(async ({ ctx }) => {
+      const folder = await ctx.database.query.folderSchema.findFirst({
+        where: eq(folderSchema.userId, ctx.user.id),
+        with: {
+          urls: {
+            with: {
+              tags: true
+            }
+          }
+        }
+      });
+
+      return folder;
     })
 });

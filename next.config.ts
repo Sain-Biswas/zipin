@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   typedRoutes: true,
   experimental: {
-    ppr: true
+    cacheComponents: true
   }
 };
 
