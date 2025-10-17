@@ -160,18 +160,69 @@ export const linksRouter = createTRPCRouter({
         folderName: z.string()
       })
     )
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx, input }) => {
       const folder = await ctx.database.query.folderSchema.findFirst({
-        where: eq(folderSchema.userId, ctx.user.id),
+        where: and(
+          eq(folderSchema.userId, ctx.user.id),
+          eq(folderSchema.normalized, input.folderName)
+        ),
         with: {
           urls: {
             with: {
-              tags: true
-            }
+              tags: {
+                with: {
+                  tags: true
+                }
+              }
+            },
+            extras: (urls, { sql }) => ({
+              clickCount:
+                sql<number>`(SELECT COUNT(*) FROM clicks c WHERE c.url_id = ${urls.id})`.as(
+                  "click_count"
+                )
+            })
           }
         }
       });
 
-      return folder;
+      if (!folder)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Requested folder is not available in records."
+        });
+
+      return {
+        id: folder.id,
+        name: folder.name,
+        normalized: folder.normalized,
+        isUTM: folder.isUTM ?? false,
+        utm:
+          folder.isUTM ?
+            {
+              source: folder.isSourceEnabled,
+              medium: folder.isMediumEnabled,
+              campaign: folder.isCampaignEnabled,
+              term: folder.isTermEnabled,
+              content: folder.isContentEnabled
+            }
+          : null,
+        createdOn: folder.createdAt,
+        lastUpdatedOn: folder.updatedAt,
+        urls: folder.urls.map((url) => ({
+          id: url.id,
+          originalURL: url.originalUrl,
+          description: url.description,
+          isActive: url.isActive,
+          utm: url.utm,
+          clickCount: url.clickCount,
+          createdOn: url.createdOn,
+          expiresOn: url.expiresOn,
+          tags: url.tags.map((t) => ({
+            id: t.tags.id,
+            name: t.tags.name,
+            normalized: t.tags.normalized
+          }))
+        }))
+      };
     })
 });
