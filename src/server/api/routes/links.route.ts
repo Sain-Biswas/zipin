@@ -3,9 +3,7 @@ import "server-only";
 import { TRPCError } from "@trpc/server";
 import { and, eq, or } from "drizzle-orm";
 
-import { z } from "zod";
 import { slugify } from "~/lib/normalize-alphanumeric-string";
-
 import { createTRPCRouter, protectedProcedure } from "~/server/api/index.trpc";
 import {
   folderSchema,
@@ -13,28 +11,16 @@ import {
   urlSchema,
   urlToTagsSchema
 } from "~/server/database/index.schema";
+import {
+  createNewFolderSchema,
+  createNewLinkSchema,
+  nameSchema
+} from "~/validators/trpc/links.validator";
+import { folderSlugSchema } from "~/validators/trpc/statistics.validator";
 
 export const linksRouter = createTRPCRouter({
   createNewLink: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        originalUrl: z.url(),
-        description: z.string(),
-        folderId: z.uuid(),
-        tags: z.array(z.string()),
-        expiresOn: z.date().nullable(),
-        utm: z
-          .object({
-            source: z.string().nullable(),
-            medium: z.string().nullable(),
-            campaign: z.string().nullable(),
-            term: z.string().nullable(),
-            content: z.string().nullable()
-          })
-          .nullable()
-      })
-    )
+    .input(createNewLinkSchema)
     .mutation(async ({ input, ctx }) => {
       const checkUrlId = await ctx.database.query.urlSchema.findFirst({
         where: eq(urlSchema.id, input.id)
@@ -73,7 +59,7 @@ export const linksRouter = createTRPCRouter({
     }),
 
   createNewTag: protectedProcedure
-    .input(z.object({ name: z.string() }))
+    .input(nameSchema)
     .mutation(async ({ ctx, input }) => {
       const normalized = slugify(input.name);
 
@@ -112,17 +98,7 @@ export const linksRouter = createTRPCRouter({
   }),
 
   createNewFolder: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        isUTM: z.boolean(),
-        isSourceEnabled: z.boolean(),
-        isMediumEnabled: z.boolean(),
-        isCampaignEnabled: z.boolean(),
-        isTermEnabled: z.boolean(),
-        isContentEnabled: z.boolean()
-      })
-    )
+    .input(createNewFolderSchema)
     .mutation(async ({ ctx, input }) => {
       const normalized = slugify(input.name);
 
@@ -156,16 +132,12 @@ export const linksRouter = createTRPCRouter({
   }),
 
   getFolderWithLinks: protectedProcedure
-    .input(
-      z.object({
-        folderName: z.string()
-      })
-    )
+    .input(folderSlugSchema)
     .query(async ({ ctx, input }) => {
       const folder = await ctx.database.query.folderSchema.findFirst({
         where: and(
           eq(folderSchema.userId, ctx.user.id),
-          eq(folderSchema.normalized, input.folderName)
+          eq(folderSchema.normalized, input.folderSlug)
         ),
         with: {
           urls: {

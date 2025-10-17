@@ -3,16 +3,16 @@ import { createTRPCRouter, protectedProcedure } from "../index.trpc";
 
 import { TRPCError } from "@trpc/server";
 import { and, eq, sql } from "drizzle-orm";
-import { z } from "zod";
 import {
   clicksSchema,
   folderSchema,
   urlSchema
 } from "~/server/database/index.schema";
+import { folderSlugSchema } from "~/validators/trpc/statistics.validator";
 
 export const statisticsRouter = createTRPCRouter({
   getFolderUTMStatistics: protectedProcedure
-    .input(z.object({ folderSlug: z.string() }))
+    .input(folderSlugSchema)
     .query(async ({ ctx, input }) => {
       const folder = await ctx.database.query.folderSchema.findFirst({
         where: and(
