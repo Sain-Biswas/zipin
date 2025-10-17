@@ -1,6 +1,7 @@
+import "server-only";
+
 import { TRPCError } from "@trpc/server";
 import { and, eq, or } from "drizzle-orm";
-import "server-only";
 
 import { z } from "zod";
 import { slugify } from "~/lib/normalize-alphanumeric-string";
