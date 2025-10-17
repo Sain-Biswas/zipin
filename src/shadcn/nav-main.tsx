@@ -18,6 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "~/shadcn/ui/sidebar";
+import { Skeleton } from "./ui/skeleton";
 
 const items = [
   {
@@ -71,6 +72,24 @@ export function NavMain() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+}
+
+export function NavMainSuspense() {
+  return (
+    <SidebarGroup>
+      <SidebarGroupContent className="flex flex-col gap-2">
+        <SidebarMenu>
+          <SidebarMenuItem className="flex items-center gap-2">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="size-8" />
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <SidebarMenu>
+          <Skeleton className="h-8 w-full" />
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
